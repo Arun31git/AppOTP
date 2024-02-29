@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+  
+</head>
+
+<body>
+    <h2>Generate OTP</h2>
+    <form id="otpForm">
+        <label for="Phone">Phone:</label>
+        <input type="Phone" id="Phone" name="Phone" required>
+        <button type="button" id="sendMessageBtn"  >Generate OTP</button>
+    </form>
+
+    <h2>Verify OTP</h2>
+    <form id="verifyForm">
+        <label for="otp">Enter OTP:</label>
+        <input type="text" id="otp" name="otp" required>
+        <button type="button" id="verifyotp" onclick="verifyOTP()">Verify OTP</button>
+    </form>
+    </body>
+
+
+<script>
+    // Function to send a POST request to generate OTP
+    function generateOTP() {
+        const phone = document.getElementById('Phone').value;
+        //const rndnum = Math.floor(1000 + Math.random() * 9000);
+        fetch('/generate-otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ Phone: phone })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+            if (data.success) {
+                alert('OTP sent successfully!');
+            } else {
+                alert('Failed to send OTP');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Event listener for button click to generate OTP
+    document.getElementById('sendMessageBtn').addEventListener('click', function() {
+        generateOTP();
+    });
+
+    // Function to verify OTP (you can implement this function as needed)
+    function verifyOTP() {
+        
+            const otp = document.getElementById('otp').value;
+           
+            fetch('/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ OTP: otp })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                if (data.success) {
+                    alert('OTP Verified successfully!');
+                } else {
+                    alert('Mismatched OTP');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        // Implement OTP verification logic here
+    }
+    document.getElementById('verifyotp').addEventListener('click', function() {
+        verifyOTP();
+    });
+</script>
+
+
+     </html>
